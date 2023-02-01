@@ -28,6 +28,12 @@ public class NotationManager : MonoBehaviour
     [SerializeField] Transform intervalChancesParent;
     private int intervalInputFieldSelected;
 
+    ///<summary> 0-Melody, 1-Chords </summary>
+    int exampleMode = 0;
+
+    private bool trebleClefActive;
+    private bool bassClefActive;
+
     private void Awake()
     {
         instance = this;
@@ -40,6 +46,40 @@ public class NotationManager : MonoBehaviour
         SetStaffPitchPositions(pitchTrebleCleffPositions, firstTrebleCleffPitchPosition);
         SetStaffPitchPositions(pitchBassCleffPositions, firstBassCleffPitchPosition);
 
+        ChangeMode(0);
+        ToggleClefs(0);
+    }
+
+    ///<summary> 0-Melody, 1-Chords </summary>
+    public void ChangeMode(int mode)
+    {
+        exampleMode = mode;
+
+        intervalChancesParent.gameObject.SetActive(mode == 0);
+        sameIntervalChanceInputField.gameObject.SetActive(mode == 0);
+    }
+
+    ///<summary> 0-Treble+Bass, 1-Treble CLef, 2-Bass Clef  </summary>
+    public void ToggleClefs(int clefMode)
+    {
+        switch (clefMode)
+        {
+            case 0:
+                trebleClefActive = true;
+                bassClefActive = true;
+                break;
+            case 1:
+                trebleClefActive = true;
+                bassClefActive = false;
+                break;
+            case 2:
+                trebleClefActive = false;
+                bassClefActive = true;
+                break;
+            default:
+                Debug.LogError("Invalid Mode");
+                break;
+        }
     }
 
     void SetStaffPitchPositions(Dictionary<int, float> clefPitchPos, float firstPos)
@@ -139,11 +179,14 @@ public class NotationManager : MonoBehaviour
         }
     }
 
-    public void GenerateExampleForTrebleAndBassClef()
+    public void GenerateExample()
     {
         ClearExample();
-        RandomExample("treble");
-        RandomExample("bass");
+
+        if (trebleClefActive)
+            RandomExample("treble");
+        if (bassClefActive)
+            RandomExample("bass");
     }
 
     ///<summary> clear all staffs </summary>
