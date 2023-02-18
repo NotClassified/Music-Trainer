@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class NotationManager : MonoBehaviour
 {
@@ -49,6 +50,7 @@ public class NotationManager : MonoBehaviour
         ChangeMode(0);
         ToggleClefs(0);
     }
+    public void BackToMenu() => SceneManager.LoadScene(0);
 
     ///<summary> 0-Melody, 1-Chords </summary>
     public void ChangeMode(int mode)
