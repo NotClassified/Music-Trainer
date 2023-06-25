@@ -13,6 +13,12 @@ namespace Music
             Interval.WholeStep, Interval.WholeStep, Interval.WholeStep, Interval.HalfStep
         };
 
+        public const int diatonicModeAmount = 7;
+        public static NoteLetter[] AllLetters =
+        {
+            NoteLetter.C, NoteLetter.D, NoteLetter.E, NoteLetter.F, NoteLetter.G, NoteLetter.A, NoteLetter.B
+        };
+
         public static Interval[] GetScalePattern(DiatonicMode mode = DiatonicMode.Ionian)
         {
             Interval[] scalePattern = new Interval[diatonicScalePattern.Length];

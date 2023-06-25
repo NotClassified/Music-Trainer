@@ -11,7 +11,7 @@ namespace Music
         public int octave;
 
 
-        public Note(NoteLetter letter, Accidental accidental = Accidental.Natural, int octave = 4)
+        public Note(NoteLetter letter = NoteLetter.C, Accidental accidental = Accidental.Natural, int octave = 4)
         {
             this.letter = letter;
             this.accidental = accidental;
@@ -29,19 +29,22 @@ namespace Music
                 return;
             }
 
+
             int newOctave = 4;
             if (targetPitch > letterPitch)
             {
-                while (targetPitch - letterPitch > 2) //target pitch is too high, go up an octave
+                while (Mathf.Abs(targetPitch - letterPitch) > 2) 
                 {
+                    //target pitch is too high, go up an octave
                     targetPitch -= 12;
                     newOctave++;
                 }
             }
             else
             {
-                while (targetPitch - letterPitch > 2) //target pitch is too low, go down an octave
+                while (Mathf.Abs(targetPitch - letterPitch) > 2) 
                 {
+                    //target pitch is too low, go down an octave
                     targetPitch += 12;
                     newOctave--;
                 }
