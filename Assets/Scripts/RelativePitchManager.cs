@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 using Music;
 
 public class RelativePitchManager : MonoBehaviour
@@ -9,6 +11,8 @@ public class RelativePitchManager : MonoBehaviour
     [SerializeField] AudioSource[] source;
     [SerializeField] int bpm;
     Note[] scale;
+
+    [SerializeField] Transform scaleDegreeParent;
 
     private void Start()
     {
@@ -67,6 +71,20 @@ public class RelativePitchManager : MonoBehaviour
         for (int i = 0; i < scale.Length; i++)
         {
             source[i].clip = soundFont.GetPitch(scale[i].GetPitch());
+        }
+        UpdateScaleDegreeUI();
+    }
+
+    void UpdateScaleDegreeUI()
+    {
+        TextMeshProUGUI[] degree_text = new TextMeshProUGUI[scaleDegreeParent.childCount];
+        for (int i = 0; i < scaleDegreeParent.childCount; i++)
+        {
+            degree_text[i] = scaleDegreeParent.GetChild(i).GetComponentInChildren<TextMeshProUGUI>();
+        }
+        for (int i = 0; i < scale.Length; i++)
+        {
+            degree_text[i].text = scale[i].GetName(false);
         }
     }
 }

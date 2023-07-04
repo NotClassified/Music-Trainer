@@ -80,8 +80,11 @@ namespace Music
         {
             return this.letter.GetHashCode() + this.accidental.GetHashCode();
         }
-        public override string ToString()
+        public override string ToString() => GetName(true);
+        public string GetName(bool showOctave)
         {
+            string name = letter.ToString();
+
             string accidentalSymbol = "";
             switch (accidental)
             {
@@ -98,7 +101,12 @@ namespace Music
                     accidentalSymbol = "x";
                     break;
             }
-            return letter + accidentalSymbol + octave; //ex: C#4, Eb2, B5...
+            name += accidentalSymbol; //ex: C#, Eb, B...
+
+            if (showOctave)
+                name += octave; //ex: C#4, Eb2, B5...
+
+            return name; 
         }
 
 
