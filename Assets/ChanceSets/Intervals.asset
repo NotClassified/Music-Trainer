@@ -10,30 +10,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c91f792a7d88f30488f0e85f2a46455a, type: 3}
-  m_Name: ScaleDegrees
+  m_Name: Intervals
   m_EditorClassIdentifier: 
   set:
-  - value: 0
-    percentChance: 12.5
-    perserveChance: 0
   - value: 1
-    percentChance: 12.5
-    perserveChance: 0
+    percentChance: 0
+    perserveChance: 1
   - value: 2
-    percentChance: 12.5
-    perserveChance: 0
+    percentChance: 35
+    perserveChance: 1
   - value: 3
-    percentChance: 12.5
-    perserveChance: 0
+    percentChance: 25
+    perserveChance: 1
   - value: 4
-    percentChance: 12.5
+    percentChance: 16.437988
     perserveChance: 0
   - value: 5
-    percentChance: 12.5
+    percentChance: 12.86377
     perserveChance: 0
   - value: 6
-    percentChance: 12.5
+    percentChance: 5.349121
     perserveChance: 0
   - value: 7
-    percentChance: 12.5
+    percentChance: 3.349121
     perserveChance: 0
+  - value: 8
+    percentChance: 2
+    perserveChance: 1

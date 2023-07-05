@@ -13,16 +13,18 @@ public class RelativePitchManager : MonoBehaviour
     Note[] scale;
 
     [SerializeField] Transform scaleDegreeParent;
-
     [SerializeField] ChanceSet degreeChances;
+
+    [SerializeField] int phraseLength;
+    [SerializeField] int phrase_bpm;
+    int[] phrase;
 
     private void Start()
     {
-        scale = Scales.GetScale(new(NoteLetter.C), DiatonicMode.Major);
-        SetSourceClips();
+        SelectScale();
     }
 
-    public void PlayerScaleCallBack() => StartCoroutine(PlayScale());
+    public void PlayScaleCallBack() => StartCoroutine(PlayScale());
     IEnumerator PlayScale()
     {
         for (int i = 0; i < scale.Length; i++)
@@ -65,16 +67,13 @@ public class RelativePitchManager : MonoBehaviour
         }
 
         scale = Scales.GetScale(tonic, selectedMode);
-        SetSourceClips();
-    }
 
-    void SetSourceClips()
-    {
         for (int i = 0; i < scale.Length; i++)
         {
             source[i].clip = soundFont.GetPitch(scale[i].GetPitch());
         }
         UpdateScaleDegreeUI();
+        NewPhrase();
     }
 
     void UpdateScaleDegreeUI()
@@ -97,6 +96,19 @@ public class RelativePitchManager : MonoBehaviour
 
     public void NewPhrase()
     {
-
+        phrase = new int[phraseLength];
+        for (int i = 0; i < phraseLength; i++)
+        {
+            phrase[i] = degreeChances.RandomValue();
+        }
+    }
+    public void PlayPhraseCallBack() => StartCoroutine(PlayPhrase());
+    IEnumerator PlayPhrase()
+    {
+        for (int i = 0; i < phrase.Length; i++)
+        {
+            source[phrase[i]].Play();
+            yield return new WaitForSeconds(60f / phrase_bpm);
+        }
     }
 }

@@ -28,20 +28,19 @@ public class ChanceSet : ScriptableObject
             return 0;
         }
 
-        int index = 0;
+        int index = -1;
         float rand = Random.Range(0f, 100f);
         while (rand >= 0)
         {
+            rand -= set[++index].percentChance;
+
             if (index == set.Length)
             {
                 index--;
                 Debug.LogWarning("total of chances is too low");
                 break;
             }
-
-            rand -= set[index++].percentChance;
         }
-
         return set[index].value;
     }
 
