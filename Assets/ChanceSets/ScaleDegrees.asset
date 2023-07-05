@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c91f792a7d88f30488f0e85f2a46455a, type: 3}
+  m_Name: ScaleDegrees
+  m_EditorClassIdentifier: 
+  set:
+  - value: 1
+    percentChance: 0.8799988
+    perserveChance: 0
+  - value: 2
+    percentChance: 30
+    perserveChance: 1
+  - value: 3
+    percentChance: 20
+    perserveChance: 1
+  - value: 4
+    percentChance: 13.568888
+    perserveChance: 0
+  - value: 5
+    percentChance: 13.568888
+    perserveChance: 0
+  - value: 6
+    percentChance: 9.99111
+    perserveChance: 0
+  - value: 7
+    percentChance: 9.99111
+    perserveChance: 0
+  - value: 8
+    percentChance: 2
+    perserveChance: 1

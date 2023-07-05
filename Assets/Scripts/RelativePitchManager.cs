@@ -14,6 +14,8 @@ public class RelativePitchManager : MonoBehaviour
 
     [SerializeField] Transform scaleDegreeParent;
 
+    [SerializeField] ChanceSet degreeChances;
+
     private void Start()
     {
         scale = Scales.GetScale(new(NoteLetter.C), DiatonicMode.Major);
@@ -86,5 +88,15 @@ public class RelativePitchManager : MonoBehaviour
         {
             degree_text[i].text = scale[i].GetName(false);
         }
+    }
+
+    public void ScaleDegreeButtonClick(int degree)
+    {
+        print(scale[degree].GetName(true));
+    }
+
+    public void NewPhrase()
+    {
+
     }
 }
