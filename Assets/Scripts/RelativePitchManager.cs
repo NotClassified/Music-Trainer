@@ -10,14 +10,15 @@ public class RelativePitchManager : MonoBehaviour
     [SerializeField] NoteAudio soundFont;
     [SerializeField] AudioSource[] source;
     [SerializeField] int bpm;
-    Note[] scale;
+    Note[] currentScale;
 
     [SerializeField] Transform scaleDegreeParent;
     [SerializeField] ChanceSet degreeChances;
 
     [SerializeField] int phraseLength;
     [SerializeField] int phrase_bpm;
-    int[] phrase;
+    int[] currentPhase;
+    int currentPhaseIndex;
 
     private void Start()
     {
@@ -27,12 +28,12 @@ public class RelativePitchManager : MonoBehaviour
     public void PlayScaleCallBack() => StartCoroutine(PlayScale());
     IEnumerator PlayScale()
     {
-        for (int i = 0; i < scale.Length; i++)
+        for (int i = 0; i < currentScale.Length; i++)
         {
             source[i].Play();
             yield return new WaitForSeconds(60f / bpm);
         }
-        for (int i = scale.Length - 2; i >= 0; i--)
+        for (int i = currentScale.Length - 2; i >= 0; i--)
         {
             source[i].Play();
             yield return new WaitForSeconds(60f / bpm);
@@ -66,11 +67,11 @@ public class RelativePitchManager : MonoBehaviour
             }
         }
 
-        scale = Scales.GetScale(tonic, selectedMode);
+        currentScale = Scales.GetScale(tonic, selectedMode);
 
-        for (int i = 0; i < scale.Length; i++)
+        for (int i = 0; i < currentScale.Length; i++)
         {
-            source[i].clip = soundFont.GetPitch(scale[i].GetPitch());
+            source[i].clip = soundFont.GetPitch(currentScale[i].GetPitch());
         }
         UpdateScaleDegreeUI();
         NewPhrase();
@@ -83,32 +84,60 @@ public class RelativePitchManager : MonoBehaviour
         {
             degree_text[i] = scaleDegreeParent.GetChild(i).GetComponentInChildren<TextMeshProUGUI>();
         }
-        for (int i = 0; i < scale.Length; i++)
+        for (int i = 0; i < currentScale.Length; i++)
         {
-            degree_text[i].text = scale[i].GetName(false);
+            degree_text[i].text = currentScale[i].GetName(false);
         }
     }
 
     public void ScaleDegreeButtonClick(int degree)
     {
-        print(scale[degree].GetName(true));
+        if (currentPhaseIndex == -1)
+        {
+            Debug.LogWarning("You didn't play the new phase yet");
+            return;
+        }
+        source[degree].Play();
+
+        if (degree == currentPhase[currentPhaseIndex])
+        {
+            print(true);
+            currentPhaseIndex++;
+
+            if (currentPhaseIndex == currentPhase.Length)
+                NewPhrase();
+        }
+        else
+        {
+            print(false);
+            currentPhaseIndex--;
+        }
     }
 
     public void NewPhrase()
     {
-        phrase = new int[phraseLength];
+        currentPhase = new int[phraseLength];
         for (int i = 0; i < phraseLength; i++)
         {
-            phrase[i] = degreeChances.RandomValue();
+            currentPhase[i] = degreeChances.RandomValue();
         }
+        currentPhaseIndex = -1;
     }
     public void PlayPhraseCallBack() => StartCoroutine(PlayPhrase());
     IEnumerator PlayPhrase()
     {
-        for (int i = 0; i < phrase.Length; i++)
+        for (int i = 0; i < currentPhase.Length; i++)
         {
-            source[phrase[i]].Play();
+            source[currentPhase[i]].Play();
             yield return new WaitForSeconds(60f / phrase_bpm);
         }
+        currentPhaseIndex = 0;
     }
+
+    public void SetPhraseLength(int newLength)
+    {
+        phraseLength = newLength;
+        NewPhrase(); //remove for optimization
+    }
+    
 }
