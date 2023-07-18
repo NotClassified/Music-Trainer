@@ -17,8 +17,10 @@ public class RelativePitchManager : MonoBehaviour
 
     [SerializeField] int phraseLength;
     [SerializeField] int phrase_bpm;
-    int[] currentPhase;
-    int currentPhaseIndex;
+    int[] currentPhrase;
+    int currentPhraseIndex;
+
+    [SerializeField] TextMeshProUGUI phraseIndex_text;
 
     private void Start()
     {
@@ -92,46 +94,49 @@ public class RelativePitchManager : MonoBehaviour
 
     public void ScaleDegreeButtonClick(int degree)
     {
-        if (currentPhaseIndex == -1)
+        if (currentPhraseIndex == -1)
         {
             Debug.LogWarning("You didn't play the new phase yet");
             return;
         }
         source[degree].Play();
 
-        if (degree == currentPhase[currentPhaseIndex])
+        if (degree == currentPhrase[currentPhraseIndex])
         {
-            print(true);
-            currentPhaseIndex++;
+            currentPhraseIndex++;
 
-            if (currentPhaseIndex == currentPhase.Length)
+            if (currentPhraseIndex == currentPhrase.Length)
                 NewPhrase();
+            else
+                UpdatePhraseIndexText(Color.green);
         }
         else
         {
-            print(false);
-            currentPhaseIndex--;
+            currentPhraseIndex = 0;
+            UpdatePhraseIndexText(Color.red);
         }
     }
 
     public void NewPhrase()
     {
-        currentPhase = new int[phraseLength];
+        currentPhrase = new int[phraseLength];
         for (int i = 0; i < phraseLength; i++)
         {
-            currentPhase[i] = degreeChances.RandomValue();
+            currentPhrase[i] = degreeChances.RandomValue();
         }
-        currentPhaseIndex = -1;
+        currentPhraseIndex = -1;
+        UpdatePhraseIndexText(Color.black);
     }
     public void PlayPhraseCallBack() => StartCoroutine(PlayPhrase());
     IEnumerator PlayPhrase()
     {
-        for (int i = 0; i < currentPhase.Length; i++)
+        for (int i = 0; i < currentPhrase.Length; i++)
         {
-            source[currentPhase[i]].Play();
+            source[currentPhrase[i]].Play();
             yield return new WaitForSeconds(60f / phrase_bpm);
         }
-        currentPhaseIndex = 0;
+        currentPhraseIndex = 0;
+        UpdatePhraseIndexText(Color.black);
     }
 
     public void SetPhraseLength(int newLength)
@@ -140,4 +145,12 @@ public class RelativePitchManager : MonoBehaviour
         NewPhrase(); //remove for optimization
     }
     
+    void UpdatePhraseIndexText(Color newColor)
+    {
+        int index = currentPhraseIndex;
+        index = index < 0 ? 0 : index; //when currentPhraseIndex is -1, show 0 instead
+
+        phraseIndex_text.text = index + "/" + phraseLength;
+        phraseIndex_text.color = newColor;
+    }
 }

@@ -13,9 +13,10 @@ public class PhraseLengthUI : MonoBehaviour
     [SerializeField] Button decrement;
     int currentLength = 1;
 
-    void Awake()
+    void Start()
     {
         manager = FindObjectOfType<RelativePitchManager>();
+        print(increment);
         increment.onClick.AddListener(delegate { ChangeLength(1); });
         decrement.onClick.AddListener(delegate { ChangeLength(-1); });
 
