@@ -9,6 +9,7 @@ public class RelativePitchManager : MonoBehaviour
 {
     [SerializeField] NoteAudio soundFont;
     [SerializeField] AudioSource[] source;
+    int currentSourceIndex;
     [SerializeField] int bpm;
     Note[] currentScale;
 
@@ -27,17 +28,27 @@ public class RelativePitchManager : MonoBehaviour
         SelectScale();
     }
 
+    void PlayNote(Note note) => PlayNote(note.GetPitch());
+    void PlayNote(int pitch)
+    {
+        source[currentSourceIndex].clip = soundFont.GetPitch(pitch);
+        source[currentSourceIndex].Play();
+
+        if (++currentSourceIndex == source.Length)
+            currentSourceIndex = 0;
+    }
+
     public void PlayScaleCallBack() => StartCoroutine(PlayScale());
     IEnumerator PlayScale()
     {
         for (int i = 0; i < currentScale.Length; i++)
         {
-            source[i].Play();
+            PlayNote(currentScale[i]);
             yield return new WaitForSeconds(60f / bpm);
         }
         for (int i = currentScale.Length - 2; i >= 0; i--)
         {
-            source[i].Play();
+            PlayNote(currentScale[i]);
             yield return new WaitForSeconds(60f / bpm);
         }
     }
@@ -47,6 +58,7 @@ public class RelativePitchManager : MonoBehaviour
         Note tonic = new();
         DiatonicMode selectedMode = DiatonicMode.Major;
 
+        //set the letter, accidental, and octave of "tonic", and set the scale's mode
         DropDownComponent[] dropDownComponents = FindObjectsOfType<DropDownComponent>();
         foreach (DropDownComponent component in dropDownComponents)
         {
@@ -71,10 +83,6 @@ public class RelativePitchManager : MonoBehaviour
 
         currentScale = Scales.GetScale(tonic, selectedMode);
 
-        for (int i = 0; i < currentScale.Length; i++)
-        {
-            source[i].clip = soundFont.GetPitch(currentScale[i].GetPitch());
-        }
         UpdateScaleDegreeUI();
         NewPhrase();
     }
@@ -94,12 +102,12 @@ public class RelativePitchManager : MonoBehaviour
 
     public void ScaleDegreeButtonClick(int degree)
     {
+        PlayNote(currentScale[degree]);
         if (currentPhraseIndex == -1)
         {
             Debug.LogWarning("You didn't play the new phase yet");
             return;
         }
-        source[degree].Play();
 
         if (degree == currentPhrase[currentPhraseIndex])
         {
@@ -132,7 +140,7 @@ public class RelativePitchManager : MonoBehaviour
     {
         for (int i = 0; i < currentPhrase.Length; i++)
         {
-            source[currentPhrase[i]].Play();
+            PlayNote(currentScale[currentPhrase[i]]);
             yield return new WaitForSeconds(60f / phrase_bpm);
         }
         currentPhraseIndex = 0;

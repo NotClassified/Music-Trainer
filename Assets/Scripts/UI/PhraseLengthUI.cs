@@ -16,7 +16,6 @@ public class PhraseLengthUI : MonoBehaviour
     void Start()
     {
         manager = FindObjectOfType<RelativePitchManager>();
-        print(increment);
         increment.onClick.AddListener(delegate { ChangeLength(1); });
         decrement.onClick.AddListener(delegate { ChangeLength(-1); });
 
